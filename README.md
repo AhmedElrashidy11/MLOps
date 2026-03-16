@@ -80,8 +80,3 @@ Contributions are welcome\! If you find a bug or have a feature request, please 
 -----
 
 **Author:** [Ahmed Elrashidy](https://www.google.com/search?q=https://github.com/AhmedElrashidy11)
-
-```
-
-Would you like me to add a specific section for **Docker** instructions or **GitHub Actions** workflows if you plan on adding those to the branch?
-```
