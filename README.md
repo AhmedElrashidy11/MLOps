@@ -1,4 +1,3 @@
-````markdown
 # MLOps
 # MLOps Project: End-to-End Machine Learning Pipeline
 
