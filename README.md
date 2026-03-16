@@ -79,4 +79,4 @@ Contributions are welcome\! If you find a bug or have a feature request, please 
 
 -----
 
-**Author:** [Ahmed Elrashidy](https://www.google.com/search?q=https://github.com/AhmedElrashidy11)
+**Author:** [Ahmed Elrashidy](https://github.com/AhmedElrashidy11)
