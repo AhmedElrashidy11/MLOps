@@ -97,14 +97,6 @@ See `requirements.txt` for exact versions.
 
 **Ahmed Mohammed** – Student ID: 202202168
 
-```
-
-✅ Key fixes:  
-- Removed extra backticks in folder/code blocks.  
-- Consistent horizontal rules (`---`) for section separation.  
-- Clean Markdown spacing for readability.  
-- Commands and paths properly inside code blocks.  
-
 If you want, I can also create an **enhanced version with badges, screenshots, and MLflow experiment placeholders** for a more professional project README.  
 
 Do you want me to do that?
