@@ -96,7 +96,6 @@ See `requirements.txt` for exact versions.
 ## Author
 
 **Ahmed Mohammed** – Student ID: 202202168
-
 If you want, I can also create an **enhanced version with badges, screenshots, and MLflow experiment placeholders** for a more professional project README.  
 
 Do you want me to do that?
