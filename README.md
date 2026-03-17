@@ -1,82 +1,98 @@
-# MLOps
-# MLOps Project: End-to-End Machine Learning Pipeline
 
-This repository implements a production-ready **MLOps workflow** designed for scalability and reproducibility. It features a modular architecture that separates data ingestion, transformation, model training, and deployment.
+# MLOps Assignment – MNIST Digit Classifier
 
-## 🚀 Features
-* **Modular Coding:** Clean separation of concerns using a `src` directory structure.
-* **Custom Logging & Exception Handling:** Robust tracking and debugging for production environments.
-* **Data Pipeline:** Automated workflows from raw data to model artifacts.
-* **CI/CD Ready:** Configured for seamless integration and deployment.
+## Overview
+This repository demonstrates a PyTorch-based digit classifier trained on the MNIST dataset with MLflow integration for experiment tracking and model logging.
+
+The model is a simple feedforward neural network with one hidden layer. Multiple training runs are performed with different learning rates and batch sizes, and metrics such as loss and accuracy are tracked in MLflow.
 
 ---
 
-## 📂 Project Structure
-```text
-├── artifacts/             # Stored datasets, models, and preprocessor objects
-├── notebooks/             # Jupyter notebooks for EDA and experimentation
-├── src/                   # Source code for the project
-│   ├── components/        # Ingestion, Transformation, and Training modules
-│   ├── pipeline/          # Training and Prediction pipelines
-│   ├── logger.py          # Custom logging script
-│   ├── exception.py       # Custom exception handling script
-│   └── utils.py           # Helper functions (e.g., model saving/loading)
-├── app.py                 # Flask/FastAPI application for model serving
-├── setup.py               # Package metadata for pip installation
-└── requirements.txt       # Project dependencies
-````
+## Repository Structure
 
------
-
-## 🛠️ Getting Started
-
-### 1\. Environment Setup
-
-Create a virtual environment to manage dependencies:
-
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-### 2\. Install Requirements
+MLOps/
+├─ train.py              # Training script with MLflow logging
+├─ requirements.txt      # Required Python packages
+├─ data/                 # MNIST dataset (downloaded automatically)
+├─ mlruns/               # MLflow experiment tracking logs
+└─ README.md             # Project documentation
 
-Install the necessary libraries and the project as a local package:
+````
+
+---
+
+## Setup Instructions
+
+1. **Clone the repository**
+
+```bash
+git clone -b test-branch https://github.com/AhmedElrashidy11/MLOps.git
+cd MLOps
+````
+
+2. **Create a virtual environment**
+
+```bash
+python -m venv .venv
+# Linux/Mac
+source .venv/bin/activate
+# Windows
+.venv\Scripts\activate
+```
+
+3. **Install dependencies**
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3\. Run the Training Pipeline
+---
 
-Execute the full pipeline (Ingestion -\> Transformation -\> Training):
+## Running the Training
+
+The training script runs multiple experiments with different hyperparameters:
 
 ```bash
-python src/components/data_ingestion.py
+python train.py
 ```
 
------
+The following runs will be executed:
 
-## ⚙️ Workflow Description
+* Learning rate = 0.1, batch size = 64, epochs = 5
+* Learning rate = 0.01, batch size = 64, epochs = 5
+* Learning rate = 0.001, batch size = 64, epochs = 5
+* Learning rate = 0.001, batch size = 32, epochs = 5
+* Learning rate = 0.0005, batch size = 128, epochs = 5
 
-  * **Data Ingestion:** Reads data from sources (CSV/Database) and splits it into Train/Test sets.
-  * **Data Transformation:** Applies feature engineering, scaling, and encoding using `ColumnTransformer` and `Pipeline`.
-  * **Model Training:** Trains multiple algorithms, performs hyperparameter tuning, and saves the best-performing model as a `.pkl` file.
-  * **Prediction Pipeline:** A lightweight script to load the saved model and preprocessor to serve real-time predictions.
+Metrics (loss and accuracy) and models are logged automatically to MLflow.
 
------
+---
 
-## 🧪 Tech Stack
+## MLflow Tracking
 
-  * **Language:** Python
-  * **Libraries:** Pandas, Scikit-Learn, XGBoost, CatBoost
-  * **Deployment:** Flask / Docker
-  * **Version Control:** Git & GitHub
+To view experiment results:
 
-## 🤝 Contributing
+```bash
+mlflow ui
+```
 
-Contributions are welcome\! If you find a bug or have a feature request, please open an issue or submit a pull request on the `test-branch`.
+Open the UI at [http://127.0.0.1:5000](http://127.0.0.1:5000) to visualize metrics, parameters, and registered models.
 
------
+---
 
-**Author:** [Ahmed Elrashidy](https://github.com/AhmedElrashidy11)
+## Dependencies
+
+* Python 3.8+
+* torch
+* torchvision
+* mlflow
+
+See `requirements.txt` for exact versions.
+
+---
+
+## Author
+
+**Ahmed Mohammed** – Student ID: 202202168
