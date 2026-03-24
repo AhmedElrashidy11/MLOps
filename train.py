@@ -120,4 +120,4 @@ def run_training(lr=0.001, batch_size=64, epochs=3):
 
 
 if __name__ == "__main__":
-    run_training()
+    run_training(lr=0.001)
