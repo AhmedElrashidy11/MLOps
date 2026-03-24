@@ -7,7 +7,7 @@ on:
 
 jobs:
 
-  # VALIDATION JOB
+  # VALIDATE
   validate:
     runs-on: ubuntu-latest
 
@@ -25,21 +25,25 @@ jobs:
           pip install -r requirements.txt
           pip install mlflow tensorflow pandas numpy dvc
 
-      - name: Pull Data (DVC optional)
+      - name: Pull Data
         run: |
           dvc pull || echo "Skipping DVC"
 
       - name: Train Model
         run: python train.py
 
-      # Upload run_id file
+      # DEBUG (optional but useful)
+      - name: Show Files
+        run: ls -la
+
+      # Upload model_info.txt
       - name: Upload Model Info
         uses: actions/upload-artifact@v4
         with:
           name: model-info
           path: model_info.txt
 
-      # Upload MLflow data (IMPORTANT FIX)
+      # Upload MLflow data
       - name: Upload MLflow Data
         uses: actions/upload-artifact@v4
         with:
@@ -47,7 +51,7 @@ jobs:
           path: mlruns/
 
 
-  # DEPLOY JOB
+  # DEPLOY
   deploy:
     needs: validate
     runs-on: ubuntu-latest
@@ -79,7 +83,6 @@ jobs:
       - name: Check Accuracy Threshold
         run: python check_threshold.py
 
-      # Only runs if above step succeeds
       - name: Mock Docker Build
         run: |
           echo "Building Docker image for Run ID: $(cat model_info.txt)"
