@@ -1,25 +1,29 @@
 import mlflow
 import sys
 
-# Set MLflow tracking URI (same as train.py)
 mlflow.set_tracking_uri("file:./mlruns")
 
-# Read run_id from file
 with open("model_info.txt", "r") as f:
     run_id = f.read().strip()
 
-# Get run from MLflow
+print(f"Run ID: {run_id}")
+
 run = mlflow.get_run(run_id)
 
-# Get accuracy metric
-accuracy = run.data.metrics.get("final_accuracy", 0)
+# 🔍 Print ALL metrics (DEBUG)
+print("All metrics:", run.data.metrics)
 
-print(f"Run ID: {run_id}")
+accuracy = run.data.metrics.get("final_accuracy")
+
+# 🚨 Handle missing metric
+if accuracy is None:
+    print("❌ ERROR: final_accuracy not found in MLflow!")
+    sys.exit(1)
+
 print(f"Final Accuracy: {accuracy}")
 
-# Threshold check
 if accuracy < 0.85:
-    print("Accuracy below 0.85 → Deployment FAILED")
+    print("❌ Accuracy below 0.85 → Deployment FAILED")
     sys.exit(1)
 else:
-    print("Accuracy ≥ 0.85 → Deployment SUCCESS")
+    print("✅ Accuracy ≥ 0.85 → Deployment SUCCESS")
