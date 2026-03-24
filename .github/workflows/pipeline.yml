@@ -1,3 +1,105 @@
+#name: ML Pipeline (Validate → Deploy)
+#
+#on:
+#  push:
+#    branches:
+#      - "*"
+#
+#jobs:
+#
+## -------------------------
+## VALIDATE JOB
+## -------------------------
+#  validate:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Checkout repo
+#        uses: actions/checkout@v4
+#
+#      - name: Setup Python
+#        uses: actions/setup-python@v5
+#        with:
+#          python-version: "3.10"
+#
+#      - name: Install dependencies
+#        run: |
+#          pip install -r requirements.txt
+#          pip install mlflow dvc torch torchvision
+#
+#      # Pull dataset (required by assignment)
+#      - name: DVC Pull
+#        run: dvc pull || echo "No DVC remote configured"
+#
+#      # Train model
+#      - name: Train model
+#        run: python train.py
+#
+#      # Debug (important for marks)
+#      - name: List files
+#        run: ls -R
+#
+#      # Upload Run ID file
+#      - name: Upload model_info.txt
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: model-info
+#          path: model_info.txt
+#
+#      # Upload MLflow logs
+#      - name: Upload mlruns
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: mlruns-data
+#          path: mlruns/
+#
+#
+## -------------------------
+## DEPLOY JOB
+## -------------------------
+#  deploy:
+#    needs: validate
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Checkout repo
+#        uses: actions/checkout@v4
+#
+#      - name: Setup Python
+#        uses: actions/setup-python@v5
+#        with:
+#          python-version: "3.10"
+#
+#      # Download model_info.txt
+#      - name: Download model info
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: model-info
+#
+#      # Download MLflow logs
+#      - name: Download mlruns
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: mlruns-data
+#          path: mlruns/
+#
+#      - name: Install MLflow
+#        run: pip install mlflow
+#
+#      # IMPORTANT: ensure MLflow reads correct local store
+#      - name: Set MLflow URI
+#        run: echo "MLFLOW_TRACKING_URI=file:mlruns" >> $GITHUB_ENV
+#
+#      # Threshold check
+#      - name: Run threshold check
+#        run: python check_threshold.py
+#
+#      # Mock deployment (required by assignment)
+#      - name: Mock Docker Build
+#        run: |
+#          echo "Building Docker image for Run ID: $(cat model_info.txt)"
+
+
 name: ML Pipeline (Validate → Deploy)
 
 on:
@@ -7,46 +109,29 @@ on:
 
 jobs:
 
-# -------------------------
-# VALIDATE JOB
-# -------------------------
   validate:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt
-          pip install mlflow dvc torch torchvision
+          pip install torch torchvision mlflow dvc
 
-      # Pull dataset (required by assignment)
-      - name: DVC Pull
-        run: dvc pull || echo "No DVC remote configured"
-
-      # Train model
       - name: Train model
         run: python train.py
 
-      # Debug (important for marks)
-      - name: List files
-        run: ls -R
-
-      # Upload Run ID file
-      - name: Upload model_info.txt
+      - name: Upload model info
         uses: actions/upload-artifact@v4
         with:
           name: model-info
           path: model_info.txt
 
-      # Upload MLflow logs
       - name: Upload mlruns
         uses: actions/upload-artifact@v4
         with:
@@ -54,29 +139,22 @@ jobs:
           path: mlruns/
 
 
-# -------------------------
-# DEPLOY JOB
-# -------------------------
   deploy:
     needs: validate
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
-      # Download model_info.txt
       - name: Download model info
         uses: actions/download-artifact@v4
         with:
           name: model-info
 
-      # Download MLflow logs
       - name: Download mlruns
         uses: actions/download-artifact@v4
         with:
@@ -86,15 +164,14 @@ jobs:
       - name: Install MLflow
         run: pip install mlflow
 
-      # IMPORTANT: ensure MLflow reads correct local store
       - name: Set MLflow URI
         run: echo "MLFLOW_TRACKING_URI=file:mlruns" >> $GITHUB_ENV
 
-      # Threshold check
-      - name: Run threshold check
+      - name: Debug MLflow
+        run: ls -R mlruns
+
+      - name: Check threshold
         run: python check_threshold.py
 
-      # Mock deployment (required by assignment)
-      - name: Mock Docker Build
-        run: |
-          echo "Building Docker image for Run ID: $(cat model_info.txt)"
+      - name: Mock Docker build
+        run: echo "Building Docker image for Run ID:" >> $(cat model_info.txt)
