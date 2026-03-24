@@ -10,20 +10,20 @@ print(f"Run ID: {run_id}")
 
 run = mlflow.get_run(run_id)
 
-# 🔍 Print ALL metrics (DEBUG)
-print("All metrics:", run.data.metrics)
+metrics = run.data.metrics
+print("All metrics:", metrics)
 
-accuracy = run.data.metrics.get("final_accuracy")
-
-# 🚨 Handle missing metric
-if accuracy is None:
-    print("❌ ERROR: final_accuracy not found in MLflow!")
+if "final_accuracy" not in metrics:
+    print("❌ final_accuracy not found")
+    print("Available keys:", list(metrics.keys()))
     sys.exit(1)
+
+accuracy = metrics["final_accuracy"]
 
 print(f"Final Accuracy: {accuracy}")
 
 if accuracy < 0.85:
     print("❌ Accuracy below 0.85 → Deployment FAILED")
     sys.exit(1)
-else:
-    print("✅ Accuracy ≥ 0.85 → Deployment SUCCESS")
+
+print("✅ Accuracy ≥ 0.85 → Deployment SUCCESS")
