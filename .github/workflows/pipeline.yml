@@ -7,6 +7,7 @@ on:
 
 jobs:
 
+  # VALIDATION JOB
   validate:
     runs-on: ubuntu-latest
 
@@ -22,29 +23,31 @@ jobs:
       - name: Install Dependencies
         run: |
           pip install -r requirements.txt
-          pip install dvc mlflow
+          pip install mlflow tensorflow pandas numpy dvc
 
-      - name: Pull Data with DVC
+      - name: Pull Data (DVC optional)
         run: |
-          dvc pull || echo "No remote configured, skipping"
+          dvc pull || echo "Skipping DVC"
 
       - name: Train Model
-        env:
-          MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
-        run: |
-          python train.py
+        run: python train.py
 
-      - name: Export Run ID
-        run: |
-          echo "dummy-run-id" > model_info.txt
-
-      - name: Upload Artifact
+      # Upload run_id file
+      - name: Upload Model Info
         uses: actions/upload-artifact@v4
         with:
           name: model-info
           path: model_info.txt
 
+      # Upload MLflow data (IMPORTANT FIX)
+      - name: Upload MLflow Data
+        uses: actions/upload-artifact@v4
+        with:
+          name: mlruns-data
+          path: mlruns/
 
+
+  # DEPLOY JOB
   deploy:
     needs: validate
     runs-on: ubuntu-latest
@@ -53,23 +56,30 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Download Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: model-info
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
+      # Download run_id
+      - name: Download Model Info
+        uses: actions/download-artifact@v4
+        with:
+          name: model-info
+
+      # Download MLflow data
+      - name: Download MLflow Data
+        uses: actions/download-artifact@v4
+        with:
+          name: mlruns-data
+
       - name: Install MLflow
         run: pip install mlflow
 
       - name: Check Accuracy Threshold
-        run: |
-          python check_threshold.py
+        run: python check_threshold.py
 
+      # Only runs if above step succeeds
       - name: Mock Docker Build
         run: |
           echo "Building Docker image for Run ID: $(cat model_info.txt)"

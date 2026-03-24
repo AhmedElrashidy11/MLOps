@@ -5,10 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b213cd32-888d-425f-a5ab-df80794d47a1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.github/workflows/pipeline.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/check_threshold.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/ml-pipeline.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/ml-pipeline.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/pipeline.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/pipeline.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -43,7 +40,8 @@
     "Python.trainM.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
-    "git-widget-placeholder": "Rebasing test-branch",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "test-branch",
     "last_opened_file_path": "C:/Users/Ahmed/Documents/Zewail City/My work of university ZC/Year 4 Semaster 2/DSAI 406 MLOps/Assignments/Assignments",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -114,6 +112,7 @@
       <workItem from="1773699108298" duration="741000" />
       <workItem from="1773699985531" duration="2200000" />
       <workItem from="1774299730410" duration="357000" />
+      <workItem from="1774344633052" duration="311000" />
     </task>
     <servers />
   </component>
