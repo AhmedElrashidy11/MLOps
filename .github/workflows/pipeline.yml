@@ -1,0 +1,81 @@
+name: ML Pipeline (Validate → Deploy)
+
+on:
+  push:
+    branches:
+      - "*"
+
+jobs:
+
+# -------------------
+# VALIDATE
+# -------------------
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          pip install torch torchvision mlflow dvc
+
+      - name: Train model
+        run: python train.py
+
+      - name: Upload model info
+        uses: actions/upload-artifact@v4
+        with:
+          name: model-info
+          path: model_info.txt
+
+      - name: Upload accuracy file
+        uses: actions/upload-artifact@v4
+        with:
+          name: accuracy-file
+          path: accuracy.txt
+
+      - name: Upload mlruns
+        uses: actions/upload-artifact@v4
+        with:
+          name: mlruns-data
+          path: mlruns/
+
+
+# -------------------
+# DEPLOY
+# -------------------
+  deploy:
+    needs: validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Download model info
+        uses: actions/download-artifact@v4
+        with:
+          name: model-info
+
+      - name: Download accuracy file
+        uses: actions/download-artifact@v4
+        with:
+          name: accuracy-file
+
+      - name: Install dependencies
+        run: pip install mlflow
+
+      - name: Check threshold
+        run: python check_threshold.py
+
+      - name: Mock Docker build
+        run: |
+          echo "Building Docker image for Run ID: $(cat model_info.txt)"
