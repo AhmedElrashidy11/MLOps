@@ -164,6 +164,3 @@ git add README.md
 git commit -m "Add concise README"
 git push origin test-branch
 ```
-
-This Markdown-formatted README is concise, professional, and perfectly suited for your **MLOps Assignment 6** submission. Let me know if you’d like to add badges (e.g., build status or license) for additional polish! 🚀
-```
