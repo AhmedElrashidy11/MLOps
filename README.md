@@ -1,8 +1,3 @@
-Sure! Below is the **short README** properly formatted in **Markdown (`README.md`)**. You can copy and paste this directly into your repository.
-
----
-
-```markdown
 # 📦 MLOps Pipeline
 
 This repository demonstrates an end-to-end **MLOps workflow** for training, validating, and deploying a machine learning model using **PyTorch**, **MLflow**, **DVC**, and **GitHub Actions**. The project emphasizes **resource governance** through a Gatekeeper-controlled CI/CD pipeline.
@@ -169,15 +164,6 @@ git add README.md
 git commit -m "Add concise README"
 git push origin test-branch
 ```
-
-```
-
----
-
-### ✅ How to Use
-1. Create a file named **`README.md`** in your repository.
-2. Paste the content above.
-3. Commit and push it to GitHub.
 
 This Markdown-formatted README is concise, professional, and perfectly suited for your **MLOps Assignment 6** submission. Let me know if you’d like to add badges (e.g., build status or license) for additional polish! 🚀
 ```
