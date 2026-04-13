@@ -14,7 +14,7 @@
 # print("All metrics:", metrics)
 #
 # if "final_accuracy" not in metrics:
-#     print("❌ final_accuracy not found")
+#     print("final_accuracy not found")
 #     print("Available keys:", list(metrics.keys()))
 #     sys.exit(1)
 #
@@ -23,10 +23,10 @@
 # print(f"Final Accuracy: {accuracy}")
 #
 # if accuracy < 0.85:
-#     print("❌ Accuracy below 0.85 → Deployment FAILED")
+#     print("Accuracy below 0.85 → Deployment FAILED")
 #     sys.exit(1)
 #
-# print("✅ Accuracy ≥ 0.85 → Deployment SUCCESS")
+# print("Accuracy ≥ 0.85 → Deployment SUCCESS")
 
 
 # import mlflow
@@ -46,7 +46,7 @@
 #
 # # SAFETY CHECK
 # if len(metrics) == 0:
-#     print("❌ No metrics found in MLflow run")
+#     print("No metrics found in MLflow run")
 #     sys.exit(1)
 #
 # # Get accuracy safely
@@ -55,17 +55,17 @@
 # elif "accuracy" in metrics:
 #     accuracy = metrics["accuracy"]
 # else:
-#     print("❌ No accuracy metric found")
+#     print("No accuracy metric found")
 #     print(metrics)
 #     sys.exit(1)
 #
 # print(f"Final Accuracy: {accuracy}")
 #
 # if accuracy < 0.85:
-#     print("❌ Accuracy < 0.85 → Deployment FAILED")
+#     print("Accuracy < 0.85 → Deployment FAILED")
 #     sys.exit(1)
 #
-# print("✅ Accuracy ≥ 0.85 → Deployment SUCCESS")
+# print("Accuracy ≥ 0.85 → Deployment SUCCESS")
 
 
 import sys
@@ -77,7 +77,7 @@ with open("accuracy.txt", "r") as f:
 print(f"Final Accuracy: {accuracy}")
 
 if accuracy < 0.85:
-    print("❌ Accuracy < 0.85 → Deployment FAILED")
+    print("Accuracy < 0.85 → Deployment FAILED")
     sys.exit(1)
 
-print("✅ Accuracy ≥ 0.85 → Deployment SUCCESS")
+print("Accuracy ≥ 0.85 → Deployment SUCCESS")

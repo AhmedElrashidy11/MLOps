@@ -9,9 +9,7 @@ from torchvision import transforms
 import mlflow
 import mlflow.pytorch
 
-# -------------------
 # DATA
-# -------------------
 transform = transforms.Compose([
     transforms.ToTensor()
 ])
@@ -30,9 +28,7 @@ test_data = torchvision.datasets.MNIST(
     transform=transform
 )
 
-# -------------------
 # MODEL
-# -------------------
 class DigitClassifier(nn.Module):
     def __init__(self):
         super().__init__()
@@ -46,9 +42,7 @@ class DigitClassifier(nn.Module):
         x = self.fc2(x)
         return x
 
-# -------------------
 # TRAINING
-# -------------------
 def run_training(lr=0.001, batch_size=64, epochs=3):
 
     mlflow.set_tracking_uri("file:./mlruns")
