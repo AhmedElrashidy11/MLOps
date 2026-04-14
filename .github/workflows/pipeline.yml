@@ -6,9 +6,8 @@ on:
       - "*"
 
 jobs:
-# -------------------
+
 # LINTER JOB (LIGHTWEIGHT GATEKEEPER)
-# -------------------
   linter:
     name: Code Linting
     runs-on: ubuntu-latest
@@ -31,9 +30,7 @@ jobs:
         run: |
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
-# -------------------
 # TRAIN JOB (EXPENSIVE)
-# -------------------
   train:
     name: Train Model
     runs-on: ubuntu-latest
@@ -97,9 +94,7 @@ jobs:
         run: |
           echo "Cleaning up temporary cloud volumes..."
 
-# -------------------
 # DEPLOY JOB
-# -------------------
   deploy:
     name: Deploy Model
     needs: train
