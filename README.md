@@ -154,13 +154,3 @@ Zewail City of Science and Technology
 ## 📜 License
 
 This project is intended for educational purposes.
-
----
-
-## ✅ How to Add the README
-
-```bash
-git add README.md
-git commit -m "Add concise README"
-git push origin test-branch
-```
