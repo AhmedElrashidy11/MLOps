@@ -1,0 +1,135 @@
+name: ML Pipeline (Gatekeeper Controlled)
+
+on:
+  push:
+    branches:
+      - "*"
+
+jobs:
+
+# LINTER JOB (LIGHTWEIGHT GATEKEEPER)
+  linter:
+    name: Code Linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install flake8
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8
+
+      - name: Run linter
+        run: |
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+# TRAIN JOB (EXPENSIVE)
+  train:
+    name: Train Model
+    runs-on: ubuntu-latest
+    needs: linter
+
+    # Gatekeeper conditions
+    if: >
+      needs.linter.result == 'success' &&
+      github.ref == 'refs/heads/main' &&
+      contains(github.event.head_commit.message, '[run-train]')
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch torchvision mlflow dvc
+
+      - name: Run training
+        run: |
+          echo "Starting training..."
+          python train.py 2> error_logs.txt
+
+      - name: Upload model info
+        uses: actions/upload-artifact@v4
+        with:
+          name: model-info
+          path: model_info.txt
+
+      - name: Upload accuracy file
+        uses: actions/upload-artifact@v4
+        with:
+          name: accuracy-file
+          path: accuracy.txt
+
+      - name: Upload MLflow runs
+        uses: actions/upload-artifact@v4
+        with:
+          name: mlruns-data
+          path: mlruns/
+
+      # Upload logs only if training fails
+      - name: Upload error logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: training-error-logs
+          path: error_logs.txt
+          if-no-files-found: warn
+
+      # Always run cleanup
+      - name: Cleanup temporary resources
+        if: always()
+        run: |
+          echo "Cleaning up temporary cloud volumes..."
+
+# DEPLOY JOB
+  deploy:
+    name: Deploy Model
+    needs: train
+    runs-on: ubuntu-latest
+
+    # Only run deployment if training actually executed and succeeded
+    if: needs.train.result == 'success'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Download model info
+        uses: actions/download-artifact@v4
+        with:
+          name: model-info
+
+      - name: Download accuracy file
+        uses: actions/download-artifact@v4
+        with:
+          name: accuracy-file
+
+      - name: Install MLflow
+        run: |
+          python -m pip install --upgrade pip
+          pip install mlflow
+
+      - name: Check accuracy threshold
+        run: python check_threshold.py
+
+      - name: Mock Docker build
+        run: |
+          echo "Building Docker image for Run ID: $(cat model_info.txt)"
